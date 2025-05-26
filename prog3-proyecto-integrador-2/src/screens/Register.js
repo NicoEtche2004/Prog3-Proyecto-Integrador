@@ -1,98 +1,103 @@
-import { Text, View, TextInput, StyleSheet,TouchableOpacity} from 'react-native'
-import React, { Component } from 'react'
-import {auth} from '../firebase/config'
+import React, {Component} from 'react'
+import { Text, View, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
+import { auth, db } from '../firebase/config'
 
-//(creo q esto hay que importatrlo) auth.onAuthStateChange
-//mantiene la sesion sin necesidad de loguearse todo el tiempo.
-//hay que hardcodear igual pero esto lo hahce posible.
+//auth.onAuthStateChanged
 
 class Register extends Component {
     constructor(props){
         super(props)
         this.state = {
-            email: '',
+            email:'',
             password: '',
-            error: false
+            username: ''
         }
     }
 
     componentDidMount(){
         auth.onAuthStateChanged((user) => {
             if(user){
-                this.props.navigation.navigate('tab')
+                this.props.navigation.navigate('Tab')
             }
         })
     }
 
-    registrarUsuario(){
+    registrarUsuario(email, password, username){
         if(
-            this.state.email === 'Nelson' &&
-            this.state.password === '12345'
+            (
+                email !== '' &&
+                password !== '' &&
+                username !== ''
+            )
+            &&
+            password.length >= 6
+            &&
+            email.includes('@') 
+            &&
+            username.length > 3
         ){
-            this.props.navigation.navigate('Tab')
-        } else {
-            this.setState({email:'', password: '', error: true})
-        }
-    }
+          auth.createUserWithEmailAndPassword(email, password)
+          .then(() => {
 
-//pregunta de examen
-//si el metodo esta defiinido esperando dos parametros. los llamo cuando lo ejecuto
-
-    registrarUsuario(email, password){
-        if(
-            (email !== '' && password !== '')
-                && password.length >= 6 && email.includes('@')
-        ){
-            auth.createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                this.props.navigation.navigate('tab')
+            db.collection('users')
+            .add({
+                owner: email,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                username: username
             })
-            .catch(err => console.log('err:', err))
+            .then(()=> {
+                this.props.navigation.navigate('Tab')
+            })
+
+          })
+          .catch(err=> console.log('err:', err))  
         }
     }
 
-  render() {
-    return (
-      <View>
-        <Text>Register</Text>
-            <TextInput
-                style={
-                    styles.input
-                }
-                keyboardType='default'
-                value={this.state.email}
-                onChangeText={(texto) => this.setState({email: texto, error: false }) }
-                placeholder='Ingresa tu email'
-            />
-            <TextInput
-                style={
-                    styles.input
-                }
-                keyboardType='default'
-                value={this.state.password}
-                onChangeText={(texto) => this.setState({password: texto, error: false }) }
-                placeholder='Ingresa tu password'
-                secureTextEntry={true}
-            />
-            <TouchableOpacity onPress={()=> this.registrarUsuario()}>
-                <Text>Registrarme</Text>
-            </TouchableOpacity>
-            {
-                this.state.error ? <Text>Credenciales invalidas</Text> : null
-            }
-      </View>
-    )
-  }
+    render(){
+        return(
+            <View>
+                <TextInput
+                    value={this.state.email}
+                    onChangeText={(text) => this.setState({email: text})}
+                    keyboardType='default'
+                    placeholder='email'
+                    style={styles.input}
+                />
+                <TextInput
+                    value={this.state.password}
+                    onChangeText={(text) => this.setState({password: text})}
+                    keyboardType='default'
+                    placeholder='password'
+                    style={styles.input}
+                />
+                <TextInput
+                    value={this.state.username}
+                    onChangeText={(text) => this.setState({username: text})}
+                    keyboardType='default'
+                    placeholder='username'
+                    style={styles.input}
+                />
+                <TouchableOpacity onPress={()=> this.registrarUsuario(this.state.email, this.state.password, this.state.username)}>
+                    <Text>Registrar usuario</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
 }
 
-// pregunta de examen:
-// el metodo add siempre recibe un objeto literal
-
-const styles = StyleSheet.create({
-    input: {
-        borderWidth: 2,
-        borderColor: 'red'
+const styles= StyleSheet.create({
+    input:{
+        borderWidth: 1,
+        borderColor: 'pink'
     }
 })
 
 export default Register
+
+//pregunta de examen
+//si el metodo esta defiinido esperando dos parametros. los llamo cuando lo ejecuto
+
+// pregunta de examen:
+// el metodo add siempre recibe un objeto literal

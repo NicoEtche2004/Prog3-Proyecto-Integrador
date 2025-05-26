@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import Tarjeta from "../components/Tarjeta/Tarjeta";
 import {View, Text, Image, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity} from 'react-native'
 
 class Home extends Component{

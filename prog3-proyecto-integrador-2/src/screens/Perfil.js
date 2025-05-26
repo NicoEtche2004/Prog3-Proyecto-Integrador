@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { Component } from 'react'
 import {auth} from '../firebase/config'
 import { TouchableOpacity } from 'react-native'
 
-class Perfil extends component {
+class Perfil extends Component {
   constructor(props){
     super(props)
   }
@@ -26,7 +26,6 @@ class Perfil extends component {
       </View>
     )
   }
- 
 }
 
 export default Perfil
