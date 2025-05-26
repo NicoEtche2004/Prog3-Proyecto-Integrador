@@ -3,7 +3,7 @@ import React from 'react'
 import {auth} from '../firebase/config'
 import { TouchableOpacity } from 'react-native'
 
-export default class Perfil extends component {
+class Perfil extends component {
   constructor(props){
     super(props)
   }
@@ -14,7 +14,9 @@ export default class Perfil extends component {
     .catch(err => console.log('err en signouth', err))
   }
 
-  rendedr(){
+//dentro de la flatlist, la propiedad 'data' siempre recibe un array
+
+  render(){
     return (
       <View>
         <Text>Perfil</Text>
@@ -26,3 +28,5 @@ export default class Perfil extends component {
   }
  
 }
+
+export default Perfil

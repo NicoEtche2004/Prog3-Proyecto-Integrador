@@ -6,14 +6,12 @@ import {auth} from '../firebase/config'
 //mantiene la sesion sin necesidad de loguearse todo el tiempo.
 //hay que hardcodear igual pero esto lo hahce posible.
 
-export default class Register extends Component {
+class Register extends Component {
     constructor(props){
         super(props)
         this.state = {
             email: '',
             password: '',
-            input1:'',
-            input2:'',
             error: false
         }
     }
@@ -28,12 +26,12 @@ export default class Register extends Component {
 
     registrarUsuario(){
         if(
-            this.state.input1 === 'Nelson' &&
-            this.state.input2 === '12345'
+            this.state.email === 'Nelson' &&
+            this.state.password === '12345'
         ){
             this.props.navigation.navigate('Tab')
         } else {
-            this.setState({input1:'', input2: '', error: true})
+            this.setState({email:'', password: '', error: true})
         }
     }
 
@@ -62,8 +60,8 @@ export default class Register extends Component {
                     styles.input
                 }
                 keyboardType='default'
-                value={this.state.input1}
-                onChangeText={(texto) => this.setState({input1: texto, error: false }) }
+                value={this.state.email}
+                onChangeText={(texto) => this.setState({email: texto, error: false }) }
                 placeholder='Ingresa tu email'
             />
             <TextInput
@@ -71,8 +69,8 @@ export default class Register extends Component {
                     styles.input
                 }
                 keyboardType='default'
-                value={this.state.input2}
-                onChangeText={(texto) => this.setState({input2: texto, error: false }) }
+                value={this.state.password}
+                onChangeText={(texto) => this.setState({password: texto, error: false }) }
                 placeholder='Ingresa tu password'
                 secureTextEntry={true}
             />
@@ -87,9 +85,14 @@ export default class Register extends Component {
   }
 }
 
+// pregunta de examen:
+// el metodo add siempre recibe un objeto literal
+
 const styles = StyleSheet.create({
     input: {
         borderWidth: 2,
         borderColor: 'red'
     }
 })
+
+export default Register
