@@ -1,98 +1,145 @@
-import { Text, View, TextInput, StyleSheet,TouchableOpacity} from 'react-native'
-import React, { Component } from 'react'
-import {auth} from '../firebase/config'
+import { Text, View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { Component } from 'react';
+import { auth } from '../firebase/config';
 
-//(creo q esto hay que importatrlo) auth.onAuthStateChange
-//mantiene la sesion sin necesidad de loguearse todo el tiempo.
-//hay que hardcodear igual pero esto lo hahce posible.
-
-class Login extends Component {
-    constructor(props){
-        super(props)
+export default class Login extends Component {
+    constructor(props) {
+        super(props);
         this.state = {
             email: '',
             password: '',
             error: false
-        }
+        };
     }
 
-    componentDidMount(){
-        auth.onAuthStateChanged((user) => {
-            if(user){
-                this.props.navigation.navigate('tab')
-            }
-        })
-    }
+    iniciarSesion() {
+        const { email, password } = this.state;
 
-    registrarUsuario(){
-        if(
-            this.state.email === 'Nelson' &&
-            this.state.password === '12345'
-        ){
-            this.props.navigation.navigate('Tab')
+        if (email !== '' && password !== '') {
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    this.setState({ error: false });
+                    this.props.navigation.navigate('Tab', { screen: 'Home' });
+                })
+                .catch(err => {
+                    console.log('Error al iniciar sesión:', err);
+                    this.setState({ error: true });
+                });
         } else {
-            this.setState({email:'', password: '', error: true})
+            this.setState({ error: true });
         }
     }
 
-//pregunta de examen
-//si el metodo esta defiinido esperando dos parametros. los llamo cuando lo ejecuto
-
-    registrarUsuario(email, password){
-        if(
-            (email !== '' && password !== '')
-                && password.length >= 6 && email.includes('@')
-        ){
-            auth.createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                this.props.navigation.navigate('tab')
-            })
-            .catch(err => console.log('err:', err))
-        }
+    irARegistro() {
+        this.props.navigation.navigate('Register');
     }
 
-  render() {
-    return (
-      <View>
-        <Text>Login</Text>
-            <TextInput
-                style={
-                    styles.input
-                }
-                keyboardType='default'
-                value={this.state.email}
-                onChangeText={(texto) => this.setState({email: texto, error: false }) }
-                placeholder='Ingresa tu email'
-            />
-            <TextInput
-                style={
-                    styles.input
-                }
-                keyboardType='default'
-                value={this.state.password}
-                onChangeText={(texto) => this.setState({password: texto, error: false }) }
-                placeholder='Ingresa tu password'
-                secureTextEntry={true}
-            />
-            <TouchableOpacity onPress={()=> this.registrarUsuario()}>
-                <Text>Registrarme</Text>
-            </TouchableOpacity>
-            {
-                this.state.error ? <Text>Credenciales invalidas</Text> : null
-            }
-      </View>
-    )
-  }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Iniciar Sesión</Text>
+
+                <TextInput
+                    style={styles.input}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={this.state.email}
+                    onChangeText={(texto) => this.setState({ email: texto, error: false })}
+                    placeholder="Ingresa tu email"
+                    placeholderTextColor="#999"
+                />
+
+                <TextInput
+                    style={styles.input}
+                    secureTextEntry
+                    value={this.state.password}
+                    onChangeText={(texto) => this.setState({ password: texto, error: false })}
+                    placeholder="Ingresa tu clave"
+                    placeholderTextColor="#999"
+                />
+
+                <TouchableOpacity style={styles.button} onPress={() => this.iniciarSesion()}>
+                    <Text style={styles.buttonText}>Ingresar</Text>
+                </TouchableOpacity>
+
+                <View style={styles.registerContainer}>
+                    <Text style={styles.registerText}>¿No tenés cuenta?</Text>
+                    <TouchableOpacity onPress={() => this.irARegistro()}>
+                        <Text style={styles.registerLink}> Registrate</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {this.state.error && (
+                    <Text style={{ color: 'red', marginTop: 16 }}>
+                        Credenciales inválidas o campos incompletos
+                    </Text>
+                )}
+            </View>
+        );
+    }
 }
 
-// pregunta de examen:
-// el metodo add siempre recibe un objeto literal
-
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f0f4f8',
+        paddingHorizontal: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: '700',
+        marginBottom: 32,
+        color: '#1e293b',
+    },
     input: {
-        borderWidth: 2,
-        borderColor: 'red'
-    }
-})
-
-export default Login
+        width: '100%',
+        maxWidth: 400,
+        height: 50,
+        borderWidth: 1,
+        borderColor: '#cbd5e1',
+        borderRadius: 10,
+        paddingHorizontal: 16,
+        marginBottom: 16,
+        backgroundColor: '#ffffff',
+        fontSize: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+    },
+    button: {
+        width: '100%',
+        maxWidth: 400,
+        backgroundColor: '#2563eb',
+        paddingVertical: 16,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 8,
+        shadowColor: '#2563eb',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 4,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 17,
+        fontWeight: '600',
+    },
+    registerContainer: {
+        flexDirection: 'row',
+        marginTop: 24,
+    },
+    registerText: {
+        fontSize: 14,
+        color: '#64748b',
+    },
+    registerLink: {
+        fontSize: 14,
+        color: '#2563eb',
+        fontWeight: '600',
+    },
+});

@@ -2,14 +2,14 @@ import app from 'firebase/app'
 import firebase from 'firebase'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyATcoyLm9Tc5_7XaVhiDv5A-00I3vwGww4",
-    authDomain: "mi-primera-firebase-39b68.firebaseapp.com",
-    projectId: "mi-primera-firebase-39b68",
-    storageBucket: "mi-primera-firebase-39b68.firebasestorage.app",
-    messagingSenderId: "863292116218",
-    appId: "1:863292116218:web:822b6b778d773c21a28d43",
-    measurementId: "G-YZBE4DXV28"
-  };
+  apiKey: "AIzaSyB9Rekq-nCtcxjUJHjiUoC8YWB6nZEBKUY",
+  authDomain: "proyecto-2cb03.firebaseapp.com",
+  projectId: "proyecto-2cb03",
+  storageBucket: "proyecto-2cb03.firebasestorage.app",
+  messagingSenderId: "356097061448",
+  appId: "1:356097061448:web:95e8ad7d76f123039cde7d"
+};
+
 
 app.initializeApp(firebaseConfig)
 

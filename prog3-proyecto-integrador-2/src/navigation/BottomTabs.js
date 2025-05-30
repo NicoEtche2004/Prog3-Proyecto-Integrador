@@ -1,40 +1,48 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Feed from '../screens/Feed';
-import Buscador from '../screens/Buscador';
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FontAwesome } from '@expo/vector-icons';
+import Home from '../screens/Home';
+import Post from '../screens/Post';
 import Perfil from '../screens/Perfil';
-import { FontAwesome } from '@expo/vector-icons'
 
-const Tab= createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
+
 export default function BottomTabs() {
   return (
-    <Tab.Navigator>
-
-        <Tab.Screen 
-          name='Feed' 
-          component={Feed}
-          options={{
-            tabBarIcon: () => <FontAwesome name='home' size={24} color={'red'} />
-          }}
-          />
-
-        <Tab.Screen 
-          name='Buscador' 
-          component={Buscador} 
-          options={{
-            tabBarIcon: () => <FontAwesome name="search" size={24} color="red" />
-          }}
-          />
-
-        <Tab.Screen 
-          name='Perfil' 
-          component={Perfil} 
-          options={{
-            tabBarIcon: () => <FontAwesome name="smile-o" size={24} color="red" />
-          }}
-          />
-
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#007AFF',
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Post"
+        component={Post}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="plus-square" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="user" size={size} color={color} />
+          ),
+        }}
+      />
     </Tab.Navigator>
-  )
+  );
 }
