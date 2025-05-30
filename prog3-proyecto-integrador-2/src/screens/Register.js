@@ -30,7 +30,17 @@ export default class Register extends Component {
             username.length > 3
         ) {
             auth.createUserWithEmailAndPassword(email, password)
-                .then(() => { this.props.navigation.navigate('Tab', { screen: 'Home' }); })
+                .then(() => {
+                    db.collection('users')
+                        .add({
+                            owner: email,
+                            createdAt: Date.now(),
+                            updatedAt: Date.now(),
+                            username: username
+                        })
+                        .then(() => { this.props.navigation.navigate('Tab', { screen: 'Home' }); })
+
+                })
                 .catch(err => console.log('Error: ', err))
         } else {
             this.setState({ error: true });
